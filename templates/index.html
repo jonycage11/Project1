@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daily Routine Maker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        // Update time every second
+        function updateClock() {
+            const clockElement = document.getElementById('clock');
+            const now = new Date();
+            clockElement.innerHTML = now.toLocaleTimeString();
+        }
+
+        setInterval(updateClock, 1000);
+    </script>
+</head>
+<body onload="updateClock()">
+    {% if user %}
+        <h1>Welcome, {{ user }}</h1>
+        <p id="clock"></p>
+        
+        <form method="POST" action="{{ url_for('add_task') }}">
+            <input type="text" name="task" placeholder="Add your task..." required>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <h3>Your Daily Routine:</h3>
+        <ul>
+            {% for task in tasks %}
+                <li>
+                    {{ task }} <a href="{{ url_for('delete_task', task=task) }}">[Delete]</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <a href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+        <h1>Please log in</h1>
+        <a href="{{ url_for('login') }}">Login</a> | 
+        <a href="{{ url_for('register') }}">Register</a>
+    {% endif %}
+</body>
+</html>
